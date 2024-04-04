@@ -22,7 +22,7 @@ class TimestampsExpRegressor:
 
     def predict(self, x: pd.DataFrame) -> np.array:
         a, b, c = self.model
-        return x["ts"].apply(lambda t: a*numpy.exp(b*t)+c)
+        return x["ts"].apply(lambda t: a*np.exp(b*t)+c)
 
     def describe(self) -> str:
       return "Exponential regression on timestamps"
