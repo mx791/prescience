@@ -1,7 +1,7 @@
 from sklearn.linear_model import LinearRegression
 import numpy as np
 import pandas as pd
-
+from scipy.optimize import curve_fit
 
 class TimestampsRegressor:
   
@@ -15,6 +15,17 @@ class TimestampsRegressor:
     def describe(self) -> str:
       return "Linear regression on timestamps"
 
+class TimestampsExpRegressor:
+  
+    def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
+        self.model = curve_fit(lambda t,a,b,c: a*numpy.exp(b*t)+c,  x["ts"].values,  y.values,  p0=(1.0, 1.0, 0.0))[0]
+
+    def predict(self, x: pd.DataFrame) -> np.array:
+        a, b, c = self.model
+        return x["ts"].apply(lambda t: a*numpy.exp(b*t)+c)
+
+    def describe(self) -> str:
+      return "Exponential regression on timestamps"
 
 class MonthRegressor:
   
@@ -55,7 +66,8 @@ class WeekDayRegressor:
 regressor_list = [
     TimestampsRegressor,
     MonthRegressor,
-    WeekDayRegressor
+    WeekDayRegressor,
+    TimestampsExpRegressor
 ]
 
 class SumRegressor:
