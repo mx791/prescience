@@ -9,7 +9,7 @@ from model import train_regressor
 
 def test(name):
     print("Testing on dataset", name)
-    data = pd.read_csv(name + ".csv")
+    data = pd.read_csv(f"./data/{name}.csv")
     data = data.sort_values("index")
     data["Date"] = pd.to_datetime(data["index"].apply(lambda x: x.split("_")[0]))
     reg, sc = train(data, "Date", "y")
