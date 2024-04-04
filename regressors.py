@@ -67,7 +67,7 @@ regressor_list = [
     TimestampsRegressor,
     MonthRegressor,
     WeekDayRegressor,
-    TimestampsExpRegressor
+    # TimestampsExpRegressor
 ]
 
 class SumRegressor:
