@@ -18,7 +18,7 @@ class TimestampsRegressor:
 class TimestampsExpRegressor:
   
     def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
-        self.model = curve_fit(lambda t,a,b,c: a*numpy.exp(b*t)+c,  x["ts"].values,  y.values,  p0=(1.0, 1.0, 0.0))[0]
+        self.model = curve_fit(lambda t,a,b,c: a*np.exp(b*t)+c,  x["ts"].values,  y.values,  p0=(1.0, 1.0, 0.0))[0]
 
     def predict(self, x: pd.DataFrame) -> np.array:
         a, b, c = self.model
