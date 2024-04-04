@@ -5,33 +5,33 @@ import pandas as pd
 
 class TimestampsRegressor:
   
-    def fit(self, x, y):
+    def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
         self.model = LinearRegression()
         self.model.fit(x["ts"].values.reshape((-1,1)), y.values.reshape((-1,1)))
 
-    def predict(self, x):
+    def predict(self, x: pd.DataFrame) -> np.array:
         return self.model.predict(x["ts"].values.reshape((-1,1))).reshape((-1))
 
-    def describe(self):
+    def describe(self) -> str:
       return "Linear regression on timestamps"
 
 
 class MonthRegressor:
   
-    def preprocess(self, x):
+    def preprocess(self, x: int) -> np.array:
         v = np.zeros(12)
         v[x-1] = 1.0
         return v
 
-    def fit(self, x, y):
+    def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
         x_index = np.array([self.preprocess(val) for val in x["month"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
 
-    def predict(self, x):
+    def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["month"]])
         return self.model.predict(x_index).reshape((-1))
 
-    def describe(self):
+    def describe(self) -> str:
       return "Linear regression on months"
 
 class WeekDayRegressor:
@@ -41,15 +41,15 @@ class WeekDayRegressor:
         v[x] = 1.0
         return v
 
-    def fit(self, x, y):
+    def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
         x_index = np.array([self.preprocess(val) for val in x["day"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
 
-    def predict(self, x):
+    def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["day"]])
         return self.model.predict(x_index).reshape((-1))
 
-    def describe(self):
+    def describe(self) -> str:
       return "Linear regression on days"
 
 regressor_list = [
@@ -62,9 +62,9 @@ class SumRegressor:
     def __init__(self, a, b):
         self.a = a
         self.b = b
-    def predict(self, x):
+    def predict(self, x: pd.DataFrame) -> np.array:
         return self.a.predict(x) + self.b.predict(x)
-    def describe(self):
+    def describe(self) -> str:
       return f"({self.a.describe()} + {self.b.describe()})"
 
 
@@ -72,7 +72,7 @@ class ProductRegressor:
     def __init__(self, a, b):
         self.a = a
         self.b = b
-    def predict(self, x):
+    def predict(self, x: pd.DataFrame) -> np.array:
         return self.a.predict(x) * self.b.predict(x)
-    def describe(self):
+    def describe(self) -> str:
       return f"({self.a.describe()} x {self.b.describe()})"
