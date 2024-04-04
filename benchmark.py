@@ -12,7 +12,7 @@ def test(name):
     data = pd.read_csv(f"./data/{name}.csv")
     data = data.sort_values("index")
     data["Date"] = pd.to_datetime(data["index"].apply(lambda x: x.split("_")[0]))
-    reg, sc = train(data, "Date", "y")
+    reg, sc = train_regressor(data, "Date", "y")
     p = reg.predict(data)
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
