@@ -27,7 +27,7 @@ def recursive_regressor(dataframe: pd.DataFrame, date_col: str, target_col: str,
 
 
           if d > 1:
-              sub_model, sub_score = make_regressor(dataframe, date_col, target_col, d-1, preds)
+              sub_model, sub_score = recursive_regressor(dataframe, date_col, target_col, d-1, preds)
 
               if ag == "sum":
                 preds = preds + sub_model.predict(dataframe)
