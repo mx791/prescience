@@ -66,12 +66,31 @@ class WeekDayRegressor:
 
     def describe(self) -> str:
       return "Linear regression on days"
+    
+class HourRegressor:
+  
+    def preprocess(self, x):
+        v = np.zeros(24)
+        v[x] = 1.0
+        return v
+
+    def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
+        x_index = np.array([self.preprocess(val) for val in x["hour"]])
+        self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
+
+    def predict(self, x: pd.DataFrame) -> np.array:
+        x_index = np.array([self.preprocess(val) for val in x["hour"]])
+        return self.model.predict(x_index).reshape((-1))
+
+    def describe(self) -> str:
+      return "Linear regression on hours"
 
 regressor_list = [
     TimestampsRegressor,
     MonthRegressor,
     WeekDayRegressor,
-    TimestampsExpRegressor
+    TimestampsExpRegressor,
+    HourRegressor
 ]
 
 class SumRegressor:

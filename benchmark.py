@@ -17,19 +17,23 @@ def test(name):
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
 
-# test("1J7")
-# test("8QR")
-# test("BDC")
+test("1J7")
+test("8QR")
+test("BDC")
 
 
 def weather_test():
     print("Testing with weather dataset")
     data = pd.read_csv("./data/weather.csv", index_col=0)
+    print(len(data))
     data["y"] = data["Température"] - 273.15
-    data["Date"] = pd.to_datetime(data["Date"], errors='coerce')
-    reg, sc = train_regressor(data, "Date", "y")
+    data = data.dropna(subset=["y", "Date"])
+    data["date"] = pd.to_datetime(data["Date"], format='ISO8601', errors="raise", utc=True)
+    
+    reg, sc = train_regressor(data, "date", "y", max_depth=3)
     p = reg.predict(data)
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
+
 
 weather_test()
