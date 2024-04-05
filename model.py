@@ -46,5 +46,5 @@ def recursive_regressor(dataframe: pd.DataFrame, date_col: str, target_col: str,
 def train_regressor(dataframe: pd.DataFrame, date_col: str, target_col: str, max_depth=3):
     dataframe["month"] = dataframe[date_col].dt.month
     dataframe["day"] = dataframe[date_col].dt.weekday
-    dataframe["ts"] = dataframe[date_col].astype(int)
+    dataframe["ts"] = dataframe[date_col].values.astype(int)
     return recursive_regressor(dataframe, date_col, target_col, d=max_depth)

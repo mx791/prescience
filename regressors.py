@@ -18,11 +18,15 @@ class TimestampsRegressor:
 class TimestampsExpRegressor:
   
     def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
-        self.model = curve_fit(lambda t,a,b,c: a*np.exp(b*t)+c,  x["ts"].values,  y.values,  p0=(1.0, 0.000000001, 0.0))[0]
+        self.ts_mean = np.mean(x["ts"].values)
+        self.ts_std = np.std(x["ts"].values)
+        new_x = (x["ts"] - self.ts_mean) / self.ts_std
+        self.model = curve_fit(lambda t,a,b,c: a*np.exp(b*t)+c, new_x, y.values,  p0=(1.0, 0.001, 0.0))[0]
 
     def predict(self, x: pd.DataFrame) -> np.array:
         a, b, c = self.model
-        return x["ts"].apply(lambda t: a*np.exp(b*t)+c)
+        new_x = (x["ts"] - self.ts_mean) / self.ts_std
+        return new_x.apply(lambda t: a*np.exp(b*t)+c)
 
     def describe(self) -> str:
       return "Exponential regression on timestamps"
@@ -67,7 +71,7 @@ regressor_list = [
     TimestampsRegressor,
     MonthRegressor,
     WeekDayRegressor,
-    # TimestampsExpRegressor
+    TimestampsExpRegressor
 ]
 
 class SumRegressor:
