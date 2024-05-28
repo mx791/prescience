@@ -17,7 +17,7 @@ def test(name):
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
 
-test("1J7")
+# test("1J7")
 # test("8QR")
 # test("BDC")
 
@@ -36,4 +36,4 @@ def weather_test():
     print(reg.describe())
 
 
-# weather_test()
+weather_test()
