@@ -37,6 +37,8 @@ class TimestampsExpRegressor:
         self.var = y.std()
         target = (y.values - self.mean) / self.var
         self.model = curve_fit(lambda t,a,b,c: a*np.exp(b*t)+c, new_x, target,  p0=(0.5, 0.1, 0.01))[0]
+        self.inpt = y.values
+        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
 
     def predict(self, x: pd.DataFrame) -> np.array:
         a, b, c = self.model
@@ -56,6 +58,8 @@ class MonthRegressor:
     def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
         x_index = np.array([self.preprocess(val) for val in x["month"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
+        self.inpt = y.values
+        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
 
     def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["month"]])
@@ -79,6 +83,8 @@ class WeekDayRegressor:
     def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
         x_index = np.array([self.preprocess(val) for val in x["day"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
+        self.inpt = y.values
+        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
 
     def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["day"]])
@@ -101,6 +107,8 @@ class HourRegressor:
     def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
         x_index = np.array([self.preprocess(val) for val in x["hour"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
+        self.inpt = y.values
+        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
 
     def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["hour"]])
