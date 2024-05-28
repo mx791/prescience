@@ -92,7 +92,7 @@ regressor_list = [
     TimestampsRegressor,
     MonthRegressor,
     WeekDayRegressor,
-    TimestampsExpRegressor,
+    # TimestampsExpRegressor,
     HourRegressor
 ]
 
