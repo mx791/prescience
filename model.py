@@ -65,4 +65,4 @@ def train_regressor(dataframe: pd.DataFrame, date_col: str, target_col: str, max
         <img src="./main.png" />
         {model.report()}
     """)
-    return model
+    return model, score
