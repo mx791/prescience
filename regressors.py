@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+from sklearn.metrics import r2_score, mean_absolute_percentage_error
 
 def _plot_input_output(name, input, output):
   plt.figure(figsize=(12, 8))
@@ -18,11 +19,12 @@ class TimestampsRegressor:
         self.model.fit(x["ts"].values.reshape((-1,1)), y.values.reshape((-1,1)))
         self.inpt = y.values
         self.min = x["ts"].min()
-        new_x = x["ts"].values - self.min / (24 * 3600 * 365)
+        new_x = (x["ts"].values - self.min) / (24 * 3600 * 365)
         self.outpt = self.model.predict(new_x.reshape((-1,1)))
+        self.r2 = r2_score(y.values, self.outpt.reshape((-1)))
 
     def predict(self, x: pd.DataFrame) -> np.array:
-        new_x = x["ts"].values - self.min / (24 * 3600 * 365)
+        new_x = (x["ts"].values - self.min) / (24 * 3600 * 365)
         return self.model.predict(new_x.reshape((-1,1))).reshape((-1))
 
     def describe(self) -> str:
@@ -30,7 +32,12 @@ class TimestampsRegressor:
 
     def report(self):
       _plot_input_output("ts_reg", self.inpt, self.outpt)
-      return f"<h1>Timestamp Regression</h1><p>Regression over timestamps</p><p>y = {self.model.intercept_} + {self.model.coef_[0]} * TS</p><img src='./ts_reg.png' />"
+      return f"""
+        <h1>Timestamp Regression</h1>
+        <p>Regression over timestamps</p>
+        <p>y = {self.model.intercept_} + {self.model.coef_[0]} * TS</p>
+        <p>R2 = {self.r2}</p>
+        <img src='./ts_reg.png' />"""
 
 class TimestampsExpRegressor:
   
