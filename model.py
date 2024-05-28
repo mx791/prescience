@@ -40,7 +40,8 @@ def recursive_regressor(dataframe: pd.DataFrame, date_col: str, target_col: str,
           if score > best_score:
               best_score = score
               best_model = modl
-
+            
+    open("report.html", "w+").write(best_model.report())
     return best_model, best_score
 
 
