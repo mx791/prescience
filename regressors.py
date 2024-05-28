@@ -21,12 +21,15 @@ class TimestampsExpRegressor:
         self.ts_mean = np.mean(x["ts"].values)
         self.ts_std = np.std(x["ts"].values)
         new_x = (x["ts"] - self.ts_mean) / self.ts_std
-        self.model = curve_fit(lambda t,a,b,c: a*np.exp(b*t)+c, new_x, y.values,  p0=(0.5, 0.00001, y.mean()))[0]
+        self.mean = y.mean()
+        self.var = y.std()
+        target = (y.values - self.mean) / self.var
+        self.model = curve_fit(lambda t,a,b,c: a*np.exp(b*t)+c, new_x, target,  p0=(0.5, 0.1, 0.01))[0]
 
     def predict(self, x: pd.DataFrame) -> np.array:
         a, b, c = self.model
         new_x = (x["ts"] - self.ts_mean) / self.ts_std
-        return new_x.apply(lambda t: a*np.exp(b*t)+c)
+        return new_x.apply(lambda t: a*np.exp(b*t)+c) * self.var + self.mean
 
     def describe(self) -> str:
       return "Exponential regression on timestamps"
