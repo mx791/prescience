@@ -59,7 +59,7 @@ class MonthRegressor:
         x_index = np.array([self.preprocess(val) for val in x["month"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
         self.inpt = y.values
-        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
+        self.outpt = self.predict(x)
 
     def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["month"]])
@@ -84,7 +84,7 @@ class WeekDayRegressor:
         x_index = np.array([self.preprocess(val) for val in x["day"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
         self.inpt = y.values
-        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
+        self.outpt = self.outpt = self.predict(x)
 
     def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["day"]])
@@ -108,7 +108,7 @@ class HourRegressor:
         x_index = np.array([self.preprocess(val) for val in x["hour"]])
         self.model = LinearRegression().fit(x_index, y.values.reshape((-1, 1)))
         self.inpt = y.values
-        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
+        self.outpt = self.outpt = self.predict(x)
 
     def predict(self, x: pd.DataFrame) -> np.array:
         x_index = np.array([self.preprocess(val) for val in x["hour"]])
