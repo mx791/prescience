@@ -3,17 +3,29 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 
+def _plot_input_output(name, date, input, output):
+  plt.plot(input, label="Input data")
+  plt.plot(output, label="Output data")
+  plt.legend()
+  plt.savefig(name + ".png)
+
 class TimestampsRegressor:
   
     def fit(self, x: pd.DataFrame, y: pd.Series) -> None:
         self.model = LinearRegression()
         self.model.fit(x["ts"].values.reshape((-1,1)), y.values.reshape((-1,1)))
+        self.inpt = y.values
+        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
 
     def predict(self, x: pd.DataFrame) -> np.array:
         return self.model.predict(x["ts"].values.reshape((-1,1))).reshape((-1))
 
     def describe(self) -> str:
       return "Linear regression on timestamps"
+
+    def report(self):
+      _plot_input_output("ts_reg", self.inpt, self.outpt)
+      return f"<h1>Timestamp Regression</h1><p>Regression over timestamps</p><p>y = {self.model.intercept_} + {self.model.coef_[0]} * TS</p><img src='./ts_reg.png' />"
 
 class TimestampsExpRegressor:
   
@@ -52,6 +64,11 @@ class MonthRegressor:
     def describe(self) -> str:
       return "Linear regression on months"
 
+    def report(self):
+      _plot_input_output("month_reg", self.inpt, self.outpt)
+      return f"<h1>Month Regression</h1><p>Regression over month</p><img src='./month_reg.png' />"
+
+
 class WeekDayRegressor:
   
     def preprocess(self, x):
@@ -69,7 +86,11 @@ class WeekDayRegressor:
 
     def describe(self) -> str:
       return "Linear regression on days"
-    
+
+    def report(self):
+      _plot_input_output("week_reg", self.inpt, self.outpt)
+      return f"<h1>Week day Regression</h1><p>Regression over day of week</p><img src='./week_reg.png' />"
+      
 class HourRegressor:
   
     def preprocess(self, x):
@@ -88,6 +109,10 @@ class HourRegressor:
     def describe(self) -> str:
       return "Linear regression on hours"
 
+    def report(self):
+      _plot_input_output("hour_reg", self.inpt, self.outpt)
+      return f"<h1>Hour Regression</h1><p>Regression over hour</p><img src='./hour_reg.png' />"
+
 regressor_list = [
     TimestampsRegressor,
     MonthRegressor,
@@ -104,6 +129,8 @@ class SumRegressor:
         return self.a.predict(x) + self.b.predict(x)
     def describe(self) -> str:
       return f"({self.a.describe()} + {self.b.describe()})"
+    def report(self):
+      return "<h1>Summ</h1>" + self.a.report() + "<p> and <p> " + self.b.report()
 
 
 class ProductRegressor:
@@ -114,3 +141,5 @@ class ProductRegressor:
         return self.a.predict(x) * self.b.predict(x)
     def describe(self) -> str:
       return f"({self.a.describe()} x {self.b.describe()})"
+    def report(self):
+      return "<h1>Product</h1>" + self.a.report() + "<p> and <p> " + self.b.report()
