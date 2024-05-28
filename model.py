@@ -40,8 +40,21 @@ def recursive_regressor(dataframe: pd.DataFrame, date_col: str, target_col: str,
           if score > best_score:
               best_score = score
               best_model = modl
-            
-    open("./out/report.html", "w+").write(f"<h1>Model summary</h1><p>R2 = {best_score}</p>" + best_model.report())
+
+    plt.figure(figsize=(12, 8))
+    plt.plot(dataframe[target_col], label="Input data")
+    plt.plot(best_model.predict(dataframe), label="Output data")
+    plt.legend()
+    plt.savefig("./out/main.png")
+  
+    open("./out/report.html", "w+").write(f"""
+      <h1>Model summary</h1>
+      <p>R2 = {best_score}</p>
+      <p>Max depth = {d}</p>
+      <p>Trained on {len(dataframe)} points</p>
+      <img src="./main.png" />
+      {best_model.report()}
+    """)
     return best_model, best_score
 
 
