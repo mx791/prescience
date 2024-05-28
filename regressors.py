@@ -9,7 +9,7 @@ def _plot_input_output(name, input, output):
   plt.plot(input, label="Input data")
   plt.plot(output, label="Output data")
   plt.legend()
-  plt.savefig(name + ".png")
+  plt.savefig("./out" + name + ".png")
 
 class TimestampsRegressor:
   
