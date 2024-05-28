@@ -16,6 +16,7 @@ def test(name):
     p = reg.predict(data)
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
+    reg.report()
 
 test("1J7")
 test("8QR")
@@ -34,6 +35,7 @@ def weather_test():
     p = reg.predict(data)
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
+    reg.report()
 
 
 weather_test()
