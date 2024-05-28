@@ -9,7 +9,7 @@ def _plot_input_output(name, input, output):
   plt.plot(input, label="Input data")
   plt.plot(output, label="Output data")
   plt.legend()
-  plt.savefig("./out" + name + ".png")
+  plt.savefig("./out/" + name + ".png")
 
 class TimestampsRegressor:
   
@@ -17,10 +17,13 @@ class TimestampsRegressor:
         self.model = LinearRegression()
         self.model.fit(x["ts"].values.reshape((-1,1)), y.values.reshape((-1,1)))
         self.inpt = y.values
-        self.outpt = self.model.predict(x["ts"].values.reshape((-1,1)))
+        self.min = x["ts"].min()
+        new_x = x["ts"].values - self.min / (24 * 3600 * 365)
+        self.outpt = self.model.predict(new_x.reshape((-1,1)))
 
     def predict(self, x: pd.DataFrame) -> np.array:
-        return self.model.predict(x["ts"].values.reshape((-1,1))).reshape((-1))
+        new_x = x["ts"].values - self.min / (24 * 3600 * 365)
+        return self.model.predict(new_x.reshape((-1,1))).reshape((-1))
 
     def describe(self) -> str:
       return "Linear regression on timestamps"
