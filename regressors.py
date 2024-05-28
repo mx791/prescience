@@ -2,6 +2,7 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
 
 def _plot_input_output(name, input, output):
   plt.plot(input, label="Input data")
