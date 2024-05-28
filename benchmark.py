@@ -17,8 +17,8 @@ def test(name):
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
 
-# test("1J7")
-test("8QR")
+test("1J7")
+# test("8QR")
 # test("BDC")
 
 
