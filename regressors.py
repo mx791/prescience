@@ -5,6 +5,7 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 def _plot_input_output(name, input, output):
+  plt.figure(figsize=(12, 8))
   plt.plot(input, label="Input data")
   plt.plot(output, label="Output data")
   plt.legend()
