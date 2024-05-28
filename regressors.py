@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from scipy.optimize import curve_fit
 
-def _plot_input_output(name, date, input, output):
+def _plot_input_output(name, input, output):
   plt.plot(input, label="Input data")
   plt.plot(output, label="Output data")
   plt.legend()
