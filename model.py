@@ -52,13 +52,14 @@ def train_regressor(dataframe: pd.DataFrame, date_col: str, target_col: str, max
   
     model, score = recursive_regressor(dataframe, date_col, target_col, d=max_depth)
     plt.figure(figsize=(12, 8))
-    plt.plot(dataframe[target_col], label="Input data")
-    plt.plot(model.predict(dataframe), label="Output data")
+    plt.plot(dataframe[date_col], dataframe[target_col], label="Input data")
+    plt.plot(dataframe[date_col], model.predict(dataframe), label="Output data")
     plt.legend()
     plt.savefig("./out/main.png")
   
     open("./out/report.html", "w+").write(f"""
         <h1>Model summary</h1>
+        <p>{model.describe()}</p>
         <p>R2 = {score}</p>
         <p>Max depth = {max_depth}</p>
         <p>Trained on {len(dataframe)} points</p>
