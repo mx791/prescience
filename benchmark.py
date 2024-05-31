@@ -30,7 +30,7 @@ def weather_test():
     data = data.dropna(subset=["y", "Date"])
     data["date"] = pd.to_datetime(data["Date"], format='ISO8601', errors="raise", utc=True)
     
-    reg, sc = train_regressor(data, "date", "y", max_depth=3)
+    reg, sc = train_regressor(data, "date", "y", max_depth=4)
     p = reg.predict(data)
     print("r2", r2_score(data["y"].values, p))
     print(reg.describe())
