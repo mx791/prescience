@@ -8,6 +8,9 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
 
 
+template = "seaborn"
+
+
 def train_and_evaluate_model(x_train, y_train, x_test, y_test) -> dict[str, float]:
     model = Ridge().fit(x_train, y_train)
     return {
