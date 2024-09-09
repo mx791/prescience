@@ -112,10 +112,10 @@ def year_importance(data: pd.DataFrame, date_col: str, value_col: str, output_di
     text = "## Impact de l'année \n"
     text += "![image](./year_count.jpeg) \n"
     text += f"Nombre de point moyen par ans: {count_mean} \n\n"
-    text += f"Variance du nombre de points par ans: {count_var} ({int(count_var/global_var*100)} %) \n\n"
+    text += f"Variance du nombre de points par ans: {count_var} ({int(count_var/count_mean*100)} %) \n\n"
     text += "![image](./year_avg.jpeg) \n\n"
     text += f"Valeur moyenne annuelle: {avg_mean} \n\n"
-    text += f"Variance des moyennes annuelles {avg_var} ({int(avg_var/avg_mean*100)} %) \n"
+    text += f"Variance des moyennes annuelles {avg_var} ({int(avg_var/global_var*100)} %) \n"
     return text + "\n"
 
 

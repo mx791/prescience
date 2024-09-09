@@ -40,13 +40,13 @@ Variance des moyennes mensuelles 0.11 (1 %)
 ![image](./year_count.jpeg) 
 Nombre de point moyen par ans: 2916.6428571428573 
 
-Variance du nombre de points par ans: 6.409893500977808 (87 %) 
+Variance du nombre de points par ans: 6.409893500977808 (0 %) 
 
 ![image](./year_avg.jpeg) 
 
 Valeur moyenne annuelle: 12.401078760803134 
 
-Variance des moyennes annuelles 0.8287797173618122 (6 %) 
+Variance des moyennes annuelles 0.8287797173618122 (11 %) 
 
 
 
@@ -56,8 +56,8 @@ Variance des moyennes annuelles 0.8287797173618122 (6 %)
 
 |Catégorie|MSE|R2|MAE|
 |---------|---|--|---|
-|train|15.17|0.71|3.1|
-|test|15.22|0.7|3.11|
+|train|15.15|0.71|3.1|
+|test|15.31|0.7|3.12|
 
 
  ### Modèle sur split temporel
