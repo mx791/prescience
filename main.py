@@ -296,11 +296,11 @@ def main_analysis(data: pd.DataFrame, date_col: str, value_col: str, output_dir:
 
     out = build_data_summary(data, date_col, value_col, output_dir)
     out += create_model(data, date_col, value_col, output_dir)
-    open(f"{output_dir}/report.md", "w+", encoding="utf-8").write(out)
+    open(f"{output_dir}/readme.md", "w+", encoding="utf-8").write(out)
 
 
 if __name__ == "__main__":
-    data = pd.read_csv("./data.csv", sep=";", usecols=["Date", "Température"])
+    data = pd.read_csv("./data/data.csv", sep=";", usecols=["Date", "Température"])
     data = data.sort_values("Date").dropna(subset=["Température"])
     data["Date"] = pd.to_datetime(data["Date"], utc=True, errors='coerce')
     data["Température"] = data["Température"] - 273.15
