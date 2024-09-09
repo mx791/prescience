@@ -6,6 +6,7 @@ import plotly.express as px
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
+from scipy import stats
 
 
 template = "seaborn"
@@ -55,15 +56,14 @@ def create_model(data: pd.DataFrame, date_col: str, value_col: str, output_dir: 
     text += "### Modèle sur split aléatoire\n\n"
     text += "|Catégorie|MSE|R2|MAE|\n"
     text += "|---------|---|--|---|\n"
-    text += f'|train|{out1["mse_train"]}|{out1["r2_train"]}|{out1["mae_train"]}|\n'
-    text += f'|test|{out1["mse_test"]}|{out1["r2_test"]}|{out1["mae_test"]}|\n'
-
+    text += f'|train|{number_format(out1["mse_train"])}|{number_format(out1["r2_train"])}|{number_format(out1["mae_train"])}|\n'
+    text += f'|test|{number_format(out1["mse_test"])}|{number_format(out1["r2_test"])}|{number_format(out1["mae_test"])}|\n\n'
 
     text += "\n ### Modèle sur split temporel\n\n"
     text += "|Catégorie|MSE|R2|MAE|\n"
     text += "|---------|---|--|---|\n"
-    text += f'|train|{out2["mse_train"]}|{out2["r2_train"]}|{out2["mae_train"]}|\n'
-    text += f'|test|{out2["mse_test"]}|{out2["r2_test"]}|{out2["mae_test"]}|\n\n'
+    text += f'|train|{number_format(out2["mse_train"])}|{number_format(out2["r2_train"])}|{number_format(out2["mae_train"])}|\n'
+    text += f'|test|{number_format(out2["mse_test"])}|{number_format(out2["r2_test"])}|{number_format(out2["mae_test"])}|\n\n'
 
     model = Ridge().fit(x, y)
     predictions = model.predict(x)
@@ -112,13 +112,13 @@ def create_model(data: pd.DataFrame, date_col: str, value_col: str, output_dir: 
     text += "\n ### Confidency \n"
     text += "|Seuil|Erreur|\n"
     text += "|-----|------|\n"
-    text += f"|75%|{residuals_post[int(len(residuals_post)*0.75)]}|\n"
-    text += f"|80%|{residuals_post[int(len(residuals_post)*0.8)]}|\n"
-    text += f"|90%|{residuals_post[int(len(residuals_post)*0.90)]}|\n"
-    text += f"|95%|{residuals_post[int(len(residuals_post)*0.95)]}|\n"
-    text += f"|99%|{residuals_post[int(len(residuals_post)*0.99)]}|\n"
-    text += f"|99.5%|{residuals_post[int(len(residuals_post)*0.995)]}|\n"
-    text += f"|99.9%|{residuals_post[int(len(residuals_post)*0.999)]}|\n"
+    text += f"|75%|{number_format(residuals_post[int(len(residuals_post)*0.75)])}|\n"
+    text += f"|80%|{number_format(residuals_post[int(len(residuals_post)*0.8)])}|\n"
+    text += f"|90%|{number_format(residuals_post[int(len(residuals_post)*0.90)])}|\n"
+    text += f"|95%|{number_format(residuals_post[int(len(residuals_post)*0.95)])}|\n"
+    text += f"|99%|{number_format(residuals_post[int(len(residuals_post)*0.99)])}|\n"
+    text += f"|99.5%|{number_format(residuals_post[int(len(residuals_post)*0.995)])}|\n"
+    text += f"|99.9%|{number_format(residuals_post[int(len(residuals_post)*0.999)])}|\n"
 
     data["predictions"] = predictions
     data["residuals"] = residuals
@@ -154,15 +154,26 @@ def create_model(data: pd.DataFrame, date_col: str, value_col: str, output_dir: 
     f.write_image(f"{output_dir}/year_residuals.jpeg", format="jpeg")
     text += "![image](./year_residuals.jpeg)  \n"
 
-    text += "\n ## Corrélation des résidus \n"
+    text += "\n ## Corrélation temporelle des résidus \n"
     model, pred = residual_autocorrelation(residuals)
     f = px.bar(
-        x=range(-len(model.coef_), 0), y=model.coef_, title="Autocorrélation", template=template
+        x=range(1, len(model.coef_)+1), y=list(reversed(model.coef_)), title="Autocorrélation", template=template
     ).update_layout(
-        xaxis_title="Jour de décallage", yaxis_title="Corrélation", height=500, width=1200,
+        xaxis_title="Observations de décallage", yaxis_title="Corrélation", height=500, width=1200,
     )
     f.write_image(f"{output_dir}/residuals_corelation.jpeg", format="jpeg")
+
+    correl_score = [stats.pearsonr(residuals[:-i], residuals[i:])[0] for i in range(1, 50)]
+    f = px.bar(
+        x=range(1, 50), y=correl_score, title="Autocorrélation partielle", template=template
+    ).update_layout(
+        xaxis_title="Observations de décallage", yaxis_title="Corrélation", height=500, width=1200,
+    )
+    f.write_image(f"{output_dir}/residuals_corelation2.jpeg", format="jpeg")
+
     text += "![image](./residuals_corelation.jpeg)  \n"
-    text += f"R2 de prédictions des résidus: {r2_score(residuals[30:], pred)}   \n"
-    text += f"R2 de prédiction final: {r2_score(data[value_col].values[30:], pred+predictions[30:])}   \n"
+    text += "![image](./residuals_corelation2.jpeg)  \n"
+    text += f"R2 de base: {number_format(r2_score(data[value_col].values, predictions))}   \n"
+    text += f"R2 de prédictions des résidus: {number_format(r2_score(residuals[30:], pred))}   \n"
+    text += f"R2 de prédiction final: {number_format(r2_score(data[value_col].values[30:], pred+predictions[30:]))}   \n"
     return text + "\n"

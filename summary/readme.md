@@ -22,7 +22,7 @@ Variance du nombre de points par jour: 140.47 (3 %)
 
 Valeur moyenne quotidienne: 12.391581856240213 
 
-Variance des moyennes quotidiennes 5.65 (45 %) 
+Variance des moyennes quotidiennes 5.65 (77 %) 
 
 ## Impact du jour de la semaine 
 ![image](./day_count.jpeg) 
@@ -34,13 +34,13 @@ Variance du nombre de points par mois: 5.56 (0 %)
 
 Valeur moyenne mensuelle: 12.44316310048823 
 
-Variance des moyennes mensuelles 0.11 (0 %) 
+Variance des moyennes mensuelles 0.11 (1 %) 
 
 ## Impact de l'année 
 ![image](./year_count.jpeg) 
 Nombre de point moyen par ans: 2916.6428571428573 
 
-Variance du nombre de points par ans: 6.409893500977808 (0 %) 
+Variance du nombre de points par ans: 6.409893500977808 (87 %) 
 
 ![image](./year_avg.jpeg) 
 
@@ -56,15 +56,16 @@ Variance des moyennes annuelles 0.8287797173618122 (6 %)
 
 |Catégorie|MSE|R2|MAE|
 |---------|---|--|---|
-|train|15.181350033309942|0.7159215804257597|3.104540226650126|
-|test|15.215089459617326|0.7048164480679842|3.111540755786694|
+|train|15.17|0.71|3.1|
+|test|15.22|0.7|3.11|
+
 
  ### Modèle sur split temporel
 
 |Catégorie|MSE|R2|MAE|
 |---------|---|--|---|
-|train|15.37829198940564|0.7109152865859404|3.1289863217236418|
-|test|14.521872042042581|0.7208576570345686|3.027260014265633|
+|train|15.37|0.71|3.12|
+|test|14.52|0.72|3.02|
 
 ![image](./predictions.jpeg)  
 ![image](./residuals.jpeg)  
@@ -74,13 +75,13 @@ Variance des moyennes annuelles 0.8287797173618122 (6 %)
  ### Confidency 
 |Seuil|Erreur|
 |-----|------|
-|75%|4.447643172986998|
-|80%|4.951348664298468|
-|90%|6.402697852627905|
-|95%|7.6974920760081815|
-|99%|10.111906673146226|
-|99.5%|11.046615803426326|
-|99.9%|12.948903041112427|
+|75%|4.44|
+|80%|4.95|
+|90%|6.4|
+|95%|7.69|
+|99%|10.11|
+|99.5%|11.04|
+|99.9%|12.94|
 
  ## Résidus par variables 
 
@@ -88,8 +89,10 @@ Variance des moyennes annuelles 0.8287797173618122 (6 %)
 ![image](./day_residuals.jpeg)  
 ![image](./year_residuals.jpeg)  
 
- ## Corrélation des résidus 
+ ## Corrélation temporelle des résidus 
 ![image](./residuals_corelation.jpeg)  
-R2 de prédictions des résidus: 0.7382785827004958   
-R2 de prédiction final: 0.9250081883274379   
+![image](./residuals_corelation2.jpeg)  
+R2 de base: 0.71   
+R2 de prédictions des résidus: 0.73   
+R2 de prédiction final: 0.92   
 

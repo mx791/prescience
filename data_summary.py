@@ -26,7 +26,8 @@ def overall_presentation(data: pd.DataFrame, date_col: str, value_col: str, outp
     text += f"Durée moyenne entre les observations : {duration_format(np.mean(diff))} \n\n"
     text += f"Variance de la fréquence : {duration_format(np.std(diff))} \n\n"
     text += f"Valeur moyenne : {np.mean(data[value_col].values)} \n\n"
-    text += f"Variance des valeurs : {number_format(number_format(np.std(data[value_col].values)))} ({np.std(data[value_col].values)/np.mean(data[value_col].values)*100} %)\n\n"
+    var = np.std(data[value_col].values)
+    text += f"Variance des valeurs : {number_format(var)} ({var/np.mean(data[value_col].values)*100} %)\n\n"
     text += "![image](./historical.jpeg) \n\n\n"
     return text
 
@@ -48,6 +49,7 @@ def month_importance(data: pd.DataFrame, date_col: str, value_col: str, output_d
     )
     f.write_image(f"{output_dir}/month_avg.jpeg", format="jpeg")
     avg_mean, avg_var = np.mean(agg[value_col].values), np.std(agg[value_col].values)
+    global_var = np.std(data[value_col].values)
 
     text = "## Impact du mois \n"
     text += "![image](./month_count.jpeg) \n"
@@ -55,7 +57,7 @@ def month_importance(data: pd.DataFrame, date_col: str, value_col: str, output_d
     text += f"Variance du nombre de points par jour: {number_format(count_var)} ({int(count_var/count_mean*100)} %) \n\n"
     text += "![image](./month_avg.jpeg) \n\n"
     text += f"Valeur moyenne quotidienne: {avg_mean} \n\n"
-    text += f"Variance des moyennes quotidiennes {number_format(avg_var)} ({int(avg_var/avg_mean*100)} %) \n"
+    text += f"Variance des moyennes quotidiennes {number_format(avg_var)} ({int(avg_var/global_var*100)} %) \n"
     return text + "\n"
 
 
@@ -76,6 +78,7 @@ def weekday_importance(data: pd.DataFrame, date_col: str, value_col: str, output
     )
     f.write_image(f"{output_dir}/day_avg.jpeg", format="jpeg")
     avg_mean, avg_var = np.mean(agg[value_col].values), np.std(agg[value_col].values)
+    global_var = np.std(data[value_col].values)
 
     text = "## Impact du jour de la semaine \n"
     text += "![image](./day_count.jpeg) \n"
@@ -83,7 +86,7 @@ def weekday_importance(data: pd.DataFrame, date_col: str, value_col: str, output
     text += f"Variance du nombre de points par mois: {number_format(count_var)} ({int(count_var/count_mean*100)} %) \n\n"
     text += "![image](./day_avg.jpeg) \n\n"
     text += f"Valeur moyenne mensuelle: {avg_mean} \n\n"
-    text += f"Variance des moyennes mensuelles {number_format(avg_var)} ({int(avg_var/avg_mean*100)} %) \n"
+    text += f"Variance des moyennes mensuelles {number_format(avg_var)} ({int(avg_var/global_var*100)} %) \n"
     return text + "\n"
 
 
@@ -104,11 +107,12 @@ def year_importance(data: pd.DataFrame, date_col: str, value_col: str, output_di
     )
     f.write_image(f"{output_dir}/year_avg.jpeg", format="jpeg")
     avg_mean, avg_var = np.mean(agg[value_col].values), np.std(agg[value_col].values)
+    global_var = np.std(data[value_col].values)
 
     text = "## Impact de l'année \n"
     text += "![image](./year_count.jpeg) \n"
     text += f"Nombre de point moyen par ans: {count_mean} \n\n"
-    text += f"Variance du nombre de points par ans: {count_var} ({int(count_var/count_mean*100)} %) \n\n"
+    text += f"Variance du nombre de points par ans: {count_var} ({int(count_var/global_var*100)} %) \n\n"
     text += "![image](./year_avg.jpeg) \n\n"
     text += f"Valeur moyenne annuelle: {avg_mean} \n\n"
     text += f"Variance des moyennes annuelles {avg_var} ({int(avg_var/avg_mean*100)} %) \n"
