@@ -39,3 +39,9 @@ def duration_format(duration: int) -> str:
 
 def number_format(number: float) -> float:
     return int(number * 100) / 100
+
+
+def one_hot(size: int, idx: int) -> np.array:
+    out = np.zeros(size)
+    out[idx] = 1.0
+    return out
