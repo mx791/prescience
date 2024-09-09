@@ -300,7 +300,7 @@ def main_analysis(data: pd.DataFrame, date_col: str, value_col: str, output_dir:
 
 
 if __name__ == "__main__":
-    data = pd.read_csv("./data/data.csv", sep=";", usecols=["Date", "Température"])
+    data = pd.read_csv("./data.csv", sep=";", usecols=["Date", "Température"])
     data = data.sort_values("Date").dropna(subset=["Température"])
     data["Date"] = pd.to_datetime(data["Date"], utc=True, errors='coerce')
     data["Température"] = data["Température"] - 273.15
