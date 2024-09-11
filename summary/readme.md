@@ -56,8 +56,8 @@ Variance des moyennes annuelles 0.8287797173618122 (11 %)
 
 |Catégorie|MSE|R2|MAE|
 |---------|---|--|---|
-|train|15.11|0.71|3.09|
-|test|15.49|0.7|3.12|
+|train|15.19|0.71|3.1|
+|test|15.15|0.71|3.1|
 
 
  ### Modèle sur split temporel
