@@ -83,6 +83,28 @@ def create_model(data: pd.DataFrame, date_col: str, value_col: str, output_dir: 
     )
     f.write_image(f"{output_dir}/residuals.jpeg", format="jpeg")
 
+    windows_size = 500
+    residuals_df = pd.DataFrame({
+        date_col: data[date_col].values[windows_size:],
+        "residuals": residuals[windows_size:],
+        "residuals_mean": [np.mean(residuals[i-windows_size:i]) for i in range(windows_size, len(residuals))],
+        "residuals_std": [np.std(residuals[i-windows_size:i]) for i in range(windows_size, len(residuals))],
+    })
+    residuals_df_melted = residuals_df.melt(id_vars=[date_col])
+
+    f = px.line(residuals_df_melted,
+        x=date_col, y="value", title="Residuals stability", template=template, color="variable"
+    ).update_layout(
+        xaxis_title="", yaxis_title="", height=500, width=1200,
+    )
+    f.write_image(f"{output_dir}/residuals_mm.jpeg", format="jpeg")
+
+    x = np.linspace(0, 1, len(residuals_df)).reshape((-1,1))
+    mm_model = Ridge().fit(x, residuals_df["residuals_mean"])
+    mm_model_score = r2_score(residuals_df["residuals_mean"], mm_model.predict(x))
+    std_model = Ridge().fit(x, residuals_df["residuals_std"])
+    std_model_score = r2_score(residuals_df["residuals_std"], std_model.predict(x))
+
     f = px.histogram(
         x=residuals, title="Residuals", template=template
     ).update_layout(
@@ -92,7 +114,10 @@ def create_model(data: pd.DataFrame, date_col: str, value_col: str, output_dir: 
 
     text += "![image](./predictions.jpeg)  \n"
     text += "![image](./residuals.jpeg)  \n"
+    text += "![image](./residuals_mm.jpeg)  \n"
     text += "![image](./residuals_hist.jpeg)  \n"
+    text += f"Coefficient de regression pour la moyenne: {mm_model.coef_[0]} (r2: {mm_model_score})   \n"
+    text += f"Coefficient de regression pour la variance: {std_model.coef_[0]} (r2: {mm_model_score})  \n"
 
     f = px.bar(
         x=[
@@ -176,4 +201,20 @@ def create_model(data: pd.DataFrame, date_col: str, value_col: str, output_dir: 
     text += f"R2 de base: {number_format(r2_score(data[value_col].values, predictions))}   \n"
     text += f"R2 de prédictions des résidus: {number_format(r2_score(residuals[30:], pred))}   \n"
     text += f"R2 de prédiction final: {number_format(r2_score(data[value_col].values[30:], pred+predictions[30:]))}   \n"
+    
+    r2s = []
+    samples_to_use = 8
+    for i in range(1, 50):
+        x = [residuals[e-i-samples_to_use:e-i] for e in range(i+samples_to_use, len(residuals))]
+        y = residuals[samples_to_use+i:]
+        modl = Ridge().fit(x, y)
+        r2s.append(r2_score(data[value_col].values[samples_to_use+i:], predictions[samples_to_use+i:] + modl.predict(x)))
+    
+    f = px.line(
+        x=range(1, 50), y=r2s, title="R2 en fonction du lag", template=template
+    ).update_layout(
+        xaxis_title="Observations de décallage", yaxis_title="R2", height=500, width=1200,
+    )
+    f.write_image(f"{output_dir}/r2s_per_lag.jpeg", format="jpeg")
+    text += "![image](./r2s_per_lag.jpeg)  \n"
     return text + "\n"

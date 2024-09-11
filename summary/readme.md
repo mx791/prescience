@@ -56,8 +56,8 @@ Variance des moyennes annuelles 0.8287797173618122 (11 %)
 
 |Catégorie|MSE|R2|MAE|
 |---------|---|--|---|
-|train|15.15|0.71|3.1|
-|test|15.31|0.7|3.12|
+|train|15.11|0.71|3.09|
+|test|15.49|0.7|3.12|
 
 
  ### Modèle sur split temporel
@@ -69,7 +69,10 @@ Variance des moyennes annuelles 0.8287797173618122 (11 %)
 
 ![image](./predictions.jpeg)  
 ![image](./residuals.jpeg)  
+![image](./residuals_mm.jpeg)  
 ![image](./residuals_hist.jpeg)  
+Coefficient de regression pour la moyenne: -0.09455919871339634 (r2: 0.0006147524345649913)   
+Coefficient de regression pour la variance: -0.10067011060336538 (r2: 0.0006147524345649913)  
 ![image](./model_weights.jpeg)  
 
  ### Confidency 
@@ -95,4 +98,5 @@ Variance des moyennes annuelles 0.8287797173618122 (11 %)
 R2 de base: 0.71   
 R2 de prédictions des résidus: 0.73   
 R2 de prédiction final: 0.92   
+![image](./r2s_per_lag.jpeg)  
 
