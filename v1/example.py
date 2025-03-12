@@ -35,10 +35,6 @@ def train_model(x: np.array, y: np.array) -> object:
     raise Exception("Unimplemented")
 
 
-def create_report(x: np.array, y: np.array) -> object:
-    raise Exception("Unimplemented")
-
-
 if __name__ == "__main__":
     handle_main(
         FRAMEWORK_DIR,
